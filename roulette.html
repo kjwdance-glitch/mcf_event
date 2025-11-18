@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>머슬캐슬 카카오톡 채널 추가 룰렛 이벤트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* 🔥 여기 배경 이미지 URL 바꾸면 됨 */
+      background: #020617 url('https://ouw.kr/path/to/roulette-bg.jpg') no-repeat center/cover;
+      color: #f9fafb;
+      padding: 20px;
+    }
+
+    .event-wrapper {
+      max-width: 480px;
+      width: 100%;
+      background: rgba(15,23,42,0.92);
+      border-radius: 24px;
+      padding: 24px 20px 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.55);
+      border: 1px solid rgba(148,163,184,0.5);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #38bdf8;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #cbd5f5;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(30,64,175,0.6);
+      border: 1px solid rgba(96,165,250,0.8);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .notice b {
+      color: #e5e7eb;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 18px;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #111827;
+      /* 🔥 여기 룰렛판 이미지 URL 바꾸면 됨 */
+      background: url('https://ouw.kr/path/to/roulette-wheel.png') no-repeat center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transition: transform 4s cubic-bezier(0.2, 0.85, 0.15, 1);
+      box-shadow: 0 0 35px rgba(15,23,42,0.7);
+    }
+
+    .wheel-inner {
+      width: 35%;
+      height: 35%;
+      background: rgba(15,23,42,0.98);
+      border-radius: 50%;
+      border: 2px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      text-align: center;
+      padding: 4px;
+    }
+
+    .pointer {
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+      border-left: 18px solid #facc15;
+      filter: drop-shadow(0 0 6px rgba(250,204,21,0.8));
+    }
+
+    .pointer-base {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #111827;
+      border: 2px solid #facc15;
+      z-index: -1;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    button.spin-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #0b1120;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(22,163,74,0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+    button.spin-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    button.spin-btn:not(:disabled):active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 5px 12px rgba(22,163,74,0.5);
+    }
+
+    .result-box {
+      font-size: 14px;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5e7eb;
+    }
+
+    .result-highlight {
+      color: #facc15;
+      font-weight: 700;
+    }
+
+    .footer-info {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .event-wrapper {
+        padding: 20px 16px 24px;
+      }
+      .wheel-container {
+        width: 220px;
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="event-wrapper">
+    <div class="brand">MUSCLE CASTLE FITNESS</div>
+    <h1>카카오톡 채널 추가 룰렛 이벤트</h1>
+    <p class="subtitle">
+      머슬캐슬 카카오톡 채널을 추가하고<br />
+      룰렛을 돌려 <b>최대 3개월 이용권 추가</b> 혜택을 받아보세요!
+    </p>
+
+    <div class="notice">
+      <b>참여 방법</b><br />
+      1. 카카오톡에서 <b>머슬캐슬 피트니스 채널</b>을 추가합니다.<br />
+      2. 이 페이지로 돌아오면 룰렛을 돌릴 수 있습니다.<br />
+      3. 당첨 내용은 직원에게 보여주시면 즉시 적용됩니다.
+    </div>
+
+    <div class="wheel-container">
+      <div class="wheel" id="wheel">
+        <div class="wheel-inner">
+          <div>지금<br>도전!</div>
+        </div>
+      </div>
+      <div class="pointer"></div>
+      <div class="pointer-base"></div>
+    </div>
+
+    <div class="buttons">
+      <button class="spin-btn" id="spinButton">룰렛 돌리기</button>
+    </div>
+
+    <div class="result-box" id="resultBox">
+      카카오톡 채널을 추가하시면 룰렛을 돌릴 수 있습니다.
+    </div>
+
+    <div class="footer-info">
+      ※ 한 고객당 1회 참여 원칙<br />
+      ※ 데스크 직원 확인 후 혜택 적용됩니다.
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const wheel = document.getElementById('wheel');
+      const spinButton = document.getElementById('spinButton');
+      const resultBox = document.getElementById('resultBox');
+
+      // 🔥 룰렛 상품 목록 (텍스트만 바꾸면 됨)
+      const prizes = ["1개월 추가", "2개월 추가", "3개월 추가"];
+
+      let isSpinning = false;
+      let currentRotation = 0;
+
+      // 카카오 채널 추가 여부를 localStorage 로 단순 체크
+      let channelAdded = localStorage.getItem("mc_kakao_join") === "true";
+
+      window.addEventListener("load", () => {
+        if (!channelAdded) {
+          // 첫 방문 → 카카오 채널로 유도
+          alert("머슬캐슬 카카오톡 채널을 먼저 추가해주세요!");
+          localStorage.setItem("mc_kakao_join", "true");
+          window.location.href = "https://pf.kakao.com/_xhxoxdxbG";
+        } else {
+          // 이미 다녀온 사람 → 바로 룰렛 가능
+          resultBox.textContent = "룰렛을 돌려주세요!";
+          spinButton.textContent = "룰렛 돌리기";
+        }
+      });
+
+      function spinWheel() {
+        if (isSpinning) return;
+
+        isSpinning = true;
+        spinButton.disabled = true;
+        resultBox.textContent = "룰렛이 돌아가는 중입니다...";
+
+        const extraTurns = 4 + Math.random() * 2;
+        const randomOffset = Math.floor(Math.random() * 360);
+        const targetRotation = currentRotation + extraTurns * 360 + randomOffset;
+
+        wheel.style.transform = `rotate(${targetRotation}deg)`;
+
+        wheel.addEventListener(
+          "transitionend",
+          function handleTransitionEnd() {
+            wheel.removeEventListener("transitionend", handleTransitionEnd);
+
+            const finalRotation = targetRotation % 360;
+            currentRotation = finalRotation;
+
+            // 포인터는 오른쪽
+            let pointerAngle = (360 - finalRotation) % 360;
+
+            // 3개 섹터 가정 (대략 0~120, 120~240, 240~360)
+            let prizeIndex;
+            if (pointerAngle >= 0 && pointerAngle < 120) prizeIndex = 0;
+            else if (pointerAngle >= 120 && pointerAngle < 240) prizeIndex = 1;
+            else prizeIndex = 2;
+
+            const prizeText = prizes[prizeIndex];
+
+            alert("축하합니다! 🎉\\n\\n당첨 혜택: " + prizeText);
+
+            resultBox.innerHTML =
+              `당신의 혜택은 <span class="result-highlight">${prizeText}</span> 입니다.<br>이 화면을 데스크에 보여주세요.`;
+
+            isSpinning = false;
+            spinButton.disabled = false;
+          },
+          { once: true }
+        );
+      }
+
+      spinButton.addEventListener("click", spinWheel);
+    })();
+  </script>
+
+</body>
+</html>
