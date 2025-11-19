@@ -1,180 +1,427 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>머슬캐슬 룰렛 이벤트</title>
-<style>
+  <meta charset="UTF-8" />
+  <title>머슬캐슬 카카오 채널 룰렛 이벤트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR",
+        sans-serif;
+    }
+
     body {
-        background: #111;
-        color: #fff;
-        text-align: center;
-        font-family: 'Pretendard', sans-serif;
-        margin: 0;
-        padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top, #1f2937 0, #020617 55%, #000 100%);
+      color: #e5e7eb;
+      padding: 16px;
+    }
+
+    .event-wrapper {
+      width: 100%;
+      max-width: 420px;
+      background: radial-gradient(circle at top, #111827 0, #020617 60%);
+      border-radius: 28px;
+      padding: 24px 20px 28px;
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(148, 163, 184, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 90% 15%, rgba(129, 230, 217, 0.16) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 6px;
     }
 
     h1 {
-        margin-top: 30px;
-        font-size: 24px;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: #f9fafb;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .notice b {
+      color: #e5e7eb;
+    }
+
+    .wheel-section-title {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 6px;
     }
 
     .wheel-container {
-        margin: 40px auto;
-        width: 300px;
-        height: 300px;
-        position: relative;
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* 🔥 5등분 룰렛 (색상은 추후 변경 가능) */
-    #wheel {
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        border: 5px solid #fff;
-        transition: transform 4s cubic-bezier(0.1, 0.9, 0.2, 1);
-        background: conic-gradient(
-            #ef4444 0deg 72deg,     /* 30% → 1번 */
-            #f97316 72deg 144deg,   /* 25% → 2번 */
-            #eab308 144deg 216deg,  /* 20% → 3번 */
-            #22c55e 216deg 288deg,  /* 15% → 4번 */
-            #3b82f6 288deg 360deg   /* 10% → 5번 */
-        );
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #f9fafb;
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.95),
+        0 18px 45px rgba(15, 23, 42, 0.9);
+      transition: transform 4s cubic-bezier(0.2, 0.9, 0.15, 1);
+      background: conic-gradient(
+        /* 30%: 가장 눈에 띄는 골드 톤 */
+        #fbbf24 0deg 72deg,
+        /* 25%: 강한 오렌지 */
+        #fb923c 72deg 144deg,
+        /* 20%: 선명한 블루 */
+        #3b82f6 144deg 216deg,
+        /* 15%: 네온 그린 */
+        #22c55e 216deg 288deg,
+        /* 10%: 딥 퍼플 */
+        #8b5cf6 288deg 360deg
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* 포인터 */
+    .wheel-center {
+      width: 34%;
+      height: 34%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #1f2937 0, #020617 60%);
+      border: 2px solid rgba(243, 244, 246, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #e5e7eb;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      box-shadow: 0 0 18px rgba(15, 23, 42, 0.95);
+    }
+
     .pointer {
-        position: absolute;
-        top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 15px solid transparent;
-        border-right: 15px solid transparent;
-        border-bottom: 20px solid #fff;
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 20px solid #f9fafb;
+      filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.9));
     }
 
-    #spinButton {
-        background: #facc15;
-        color: #000;
-        padding: 15px 40px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 700;
+    .pointer-base {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #020617;
+      border: 2px solid #f9fafb;
+      box-shadow:
+        0 0 0 3px rgba(15, 23, 42, 0.9),
+        0 0 10px rgba(248, 250, 252, 0.8);
     }
 
-    #spinButton:disabled {
-        background: #555;
-        cursor: not-allowed;
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 14px;
     }
 
-    #resultBox {
-        margin-top: 20px;
-        font-size: 20px;
-        line-height: 1.4;
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    button.spin-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #020617;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 36px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow:
+        0 14px 28px rgba(34, 197, 94, 0.55),
+        0 0 0 1px rgba(22, 163, 74, 0.4);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
+    }
+
+    button.spin-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      background: #4b5563;
+      color: #e5e7eb;
+    }
+
+    button.spin-btn:not(:disabled):active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow:
+        0 8px 18px rgba(34, 197, 94, 0.6),
+        0 0 0 1px rgba(21, 128, 61, 0.6);
+    }
+
+    .result-box {
+      font-size: 14px;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5e7eb;
     }
 
     .result-highlight {
-        color: #facc15;
-        font-size: 24px;
-        font-weight: 800;
+      color: #facc15;
+      font-weight: 800;
     }
-</style>
+
+    .footer-info {
+      margin-top: 10px;
+      font-size: 11px;
+      text-align: center;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .event-wrapper {
+        padding: 20px 16px 24px;
+        border-radius: 22px;
+      }
+      .wheel-container {
+        width: 230px;
+        height: 230px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="event-wrapper">
+    <div class="inner">
+      <div class="brand">MUSCLE CASTLE FITNESS</div>
+      <h1>🎉 머슬캐슬 룰렛 이벤트 🎉</h1>
+      <p class="subtitle">
+        카카오톡 채널 추가 후 참여하는 전용 이벤트입니다.<br />
+        룰렛을 돌려 최대 <b>추가 이용권</b> 혜택을 받아보세요!
+      </p>
 
-<h1>🎉 머슬캐슬 룰렛 이벤트 🎉</h1>
+      <div class="notice">
+        <b>※ 참여 안내</b><br />
+        • 한 고객당 1회만 참여 가능합니다.<br />
+        • 당첨 결과 화면을 캡처하거나, 데스크 직원에게 바로 보여주세요.<br />
+        • 이벤트 운영 정책에 따라 일부 내용은 변경될 수 있습니다.
+      </div>
 
-<div class="wheel-container">
-    <div class="pointer"></div>
-    <div id="wheel"></div>
-</div>
+      <div class="wheel-section-title">당첨 구간 및 비율</div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-color" style="background:#fbbf24;"></span> 7일 추가 (30%)
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background:#fb923c;"></span> 10일 추가 (25%)
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background:#3b82f6;"></span> 상품3 (20%)
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background:#22c55e;"></span> 상품4 (15%)
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background:#8b5cf6;"></span> 상품5 (10%)
+        </div>
+      </div>
 
-<button id="spinButton">룰렛 돌리기</button>
+      <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="pointer-base"></div>
+        <div class="wheel" id="wheel">
+          <div class="wheel-center">
+            TAP<br />TO SPIN
+          </div>
+        </div>
+      </div>
 
-<div id="resultBox"></div>
+      <div class="buttons">
+        <button class="spin-btn" id="spinButton">룰렛 돌리기</button>
+      </div>
 
-<script>
-(function() {
+      <div class="result-box" id="resultBox">
+        버튼을 눌러 룰렛을 돌려주세요.
+      </div>
 
-  const wheel = document.getElementById('wheel');
-  const spinButton = document.getElementById('spinButton');
-  const resultBox = document.getElementById('resultBox');
+      <div class="footer-info">
+        ※ 당첨 결과는 머슬캐슬 데스크에서 확인 후 적용됩니다.<br />
+        ※ 브라우저를 변경하거나 쿠키/저장소를 삭제하면 참여 기록이 초기화될 수 있습니다.
+      </div>
+    </div>
+  </div>
 
-  // 🔥 5개 상품 + 확률(weight)
-  const prizes = [
-    { label: "7일 추가 이용권", weight: 30 },
-    { label: "10일 추가 이용권", weight: 25 },
-    { label: "상품3", weight: 20 },
-    { label: "상품4", weight: 15 },
-    { label: "상품5", weight: 10 }
-  ];
+  <script>
+    (function () {
+      const wheel = document.getElementById("wheel");
+      const spinButton = document.getElementById("spinButton");
+      const resultBox = document.getElementById("resultBox");
 
-  const sectionAngle = 360 / 5;
+      // 🔥 5개 상품 + 확률(weight)
+      const prizes = [
+        { label: "7일 추가 이용권", weight: 30 },
+        { label: "10일 추가 이용권", weight: 25 },
+        { label: "상품3", weight: 20 },
+        { label: "상품4", weight: 15 },
+        { label: "상품5", weight: 10 },
+      ];
 
-  // ⭐ 1회 제한 체크
-  if (localStorage.getItem("mcf_event_done") === "true") {
-    spinButton.disabled = true;
-    resultBox.innerHTML = "이미 참여하셨습니다.<br>이 화면을 데스크에 보여주세요.";
-  }
+      const SECTION_COUNT = 5;
+      const SECTION_ANGLE = 360 / SECTION_COUNT;
 
-  let isSpinning = false;
+      // ⭐ 1회 제한 (키 이름 버전 관리 가능)
+      const STORAGE_KEY = "mcf_event_done_v1";
 
-  // 🎯 확률 기반 랜덤 선택
-  function pickPrize() {
-    const total = prizes.reduce((sum, p) => sum + p.weight, 0);
-    let r = Math.random() * total;
-    for (let p of prizes) {
-      if (r < p.weight) return p;
-      r -= p.weight;
-    }
-    return prizes[0];
-  }
+      if (localStorage.getItem(STORAGE_KEY) === "true") {
+        spinButton.disabled = true;
+        resultBox.innerHTML =
+          "이미 참여하셨습니다.<br>이 화면을 데스크에 보여주세요.";
+      }
 
-  function spinWheel() {
-    if (isSpinning) return;
+      let isSpinning = false;
 
-    if (localStorage.getItem("mcf_event_done") === "true") {
-      alert("이미 참여하셨습니다.");
-      return;
-    }
+      // 🎯 확률 기반 랜덤 선택
+      function pickPrize() {
+        const total = prizes.reduce((sum, p) => sum + p.weight, 0);
+        let r = Math.random() * total;
+        for (const p of prizes) {
+          if (r < p.weight) return p;
+          r -= p.weight;
+        }
+        return prizes[0];
+      }
 
-    isSpinning = true;
-    spinButton.disabled = true;
-    resultBox.innerHTML = "🎯 돌리는 중...";
+      function spinWheel() {
+        if (isSpinning) return;
 
-    // 🎯 당첨 상품 선택
-    const selectedPrize = pickPrize();
-    const index = prizes.indexOf(selectedPrize);
+        if (localStorage.getItem(STORAGE_KEY) === "true") {
+          alert("이미 1회 참여하셨습니다.");
+          return;
+        }
 
-    // 🔥 회전각 설정
-    const randomTurns = 4 + Math.floor(Math.random() * 2); 
-    const targetAngle = randomTurns * 360 + (index * sectionAngle) + (sectionAngle / 2);
+        isSpinning = true;
+        spinButton.disabled = true;
+        resultBox.textContent = "룰렛이 돌아가는 중입니다...";
 
-    wheel.style.transform = `rotate(${targetAngle}deg)`;
+        const selectedPrize = pickPrize();
+        const index = prizes.indexOf(selectedPrize);
 
-    wheel.addEventListener("transitionend", function endSpin() {
-      wheel.removeEventListener("transitionend", endSpin);
+        // 회전 수 + 해당 섹션 중앙으로 보정
+        const randomTurns = 4 + Math.floor(Math.random() * 2); // 4~5바퀴
+        const targetAngle =
+          randomTurns * 360 + index * SECTION_ANGLE + SECTION_ANGLE / 2;
 
-      // 🔒 1회 참여 제한 저장
-      localStorage.setItem("mcf_event_done", "true");
+        wheel.style.transform = `rotate(${targetAngle}deg)`;
 
-      alert("🎉 축하합니다!\n당첨: " + selectedPrize.label);
+        wheel.addEventListener(
+          "transitionend",
+          function handleEnd() {
+            wheel.removeEventListener("transitionend", handleEnd);
 
-      resultBox.innerHTML = `
-        혜택: <span class="result-highlight">${selectedPrize.label}</span><br>
-        이 화면을 데스크에 보여주세요.
-      `;
+            // 🔒 1회 제한 저장
+            localStorage.setItem(STORAGE_KEY, "true");
 
-      isSpinning = false;
-    }, { once: true });
-  }
+            alert("🎉 축하합니다!\\n\\n당첨: " + selectedPrize.label);
 
-  spinButton.addEventListener("click", spinWheel);
-})();
-</script>
+            resultBox.innerHTML =
+              `혜택: <span class="result-highlight">${selectedPrize.label}</span><br>` +
+              `이 화면을 데스크에 보여주세요.`;
 
+            isSpinning = false;
+          },
+          { once: true }
+        );
+      }
+
+      spinButton.addEventListener("click", spinWheel);
+    })();
+  </script>
 </body>
 </html>
